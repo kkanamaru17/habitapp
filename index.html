@@ -46,19 +46,77 @@
                 </div>
             </section>
             
+            <section class="heatmap-section">
+                <h2>
+                    <button class="collapsible-button" id="heatmapToggle">
+                        Habit Heat Map <span class="toggle-icon">+</span>
+                    </button>
+                </h2>
+                <div class="collapsible-content" id="heatmapContent" style="display: none;">
+                    <div class="heatmap-controls">
+                        <label for="heatmapYearSelect">Year:</label>
+                        <select id="heatmapYearSelect"></select>
+                    </div>
+                    <div class="heatmap-legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #f8f8f8;"></div>
+                            <span>0%</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #cccccc;"></div>
+                            <span>25%</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #888888;"></div>
+                            <span>50%</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #444444;"></div>
+                            <span>75%</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: black;"></div>
+                            <span>100%</span>
+                        </div>
+                    </div>
+                    <div class="heatmap-wrapper">
+                        <div class="heatmap-grid">
+                            <div class="day-labels">
+                                <div class="day-label">Sun</div>
+                                <div class="day-label">Mon</div>
+                                <div class="day-label">Tue</div>
+                                <div class="day-label">Wed</div>
+                                <div class="day-label">Thu</div>
+                                <div class="day-label">Fri</div>
+                                <div class="day-label">Sat</div>
+                            </div>
+                            <div class="heatmap" id="heatmap">
+                                <!-- Heat map will be generated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
             <section class="calendar-section">
-                <h2>Calendar View</h2>
-                <div class="habit-selector">
-                    <label for="habitSelect">Select Habit:</label>
-                    <select id="habitSelect">
-                        <option value="">Select a habit</option>
-                    </select>
-                </div>
-                <div class="streak-info">
-                    <p>Current streak: <span id="currentStreak">0</span> days</p>
-                </div>
-                <div class="calendar" id="calendar">
-                    <!-- Calendar will be generated here -->
+                <h2>
+                    <button class="collapsible-button" id="calendarToggle">
+                        Calendar View <span class="toggle-icon">+</span>
+                    </button>
+                </h2>
+                <div class="collapsible-content" id="calendarContent" style="display: none;">
+                    <div class="habit-selector">
+                        <label for="habitSelect">Select Habit:</label>
+                        <select id="habitSelect">
+                            <option value="">Select a habit</option>
+                        </select>
+                    </div>
+                    <div class="streak-info">
+                        <p>Current streak: <span id="currentStreak">0</span> days</p>
+                    </div>
+                    <div class="calendar" id="calendar">
+                        <!-- Calendar will be generated here -->
+                    </div>
                 </div>
             </section>
         </main>

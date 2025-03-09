@@ -5,9 +5,18 @@ const addHabitBtn = document.getElementById('addHabitBtn');
 const habitSelect = document.getElementById('habitSelect');
 const calendarEl = document.getElementById('calendar');
 const currentStreakEl = document.getElementById('currentStreak');
+const calendarToggle = document.getElementById('calendarToggle');
+const calendarContent = document.getElementById('calendarContent');
+const heatmapEl = document.getElementById('heatmap');
+const heatmapYearSelect = document.getElementById('heatmapYearSelect');
+const heatmapToggle = document.getElementById('heatmapToggle');
+const heatmapContent = document.getElementById('heatmapContent');
+const toggleIcon = heatmapToggle.querySelector('.toggle-icon');
+const calendarToggleIcon = calendarToggle.querySelector('.toggle-icon');
 
 // Data structure
 let habits = JSON.parse(localStorage.getItem('habits')) || [];
+let heatmapInitialized = false;
 
 // Helper function to format date as YYYY-MM-DD
 function formatDate(date) {
@@ -35,6 +44,199 @@ function init() {
     // Initial calendar render if a habit is selected
     if (habitSelect.value) {
         renderCalendar();
+    }
+    
+    // Set up heat map toggle
+    heatmapToggle.addEventListener('click', toggleHeatMap);
+    
+    // Set up calendar toggle
+    calendarToggle.addEventListener('click', toggleCalendar);
+}
+
+// Toggle heat map visibility
+function toggleHeatMap() {
+    const isVisible = heatmapContent.style.display !== 'none';
+    
+    if (isVisible) {
+        // Hide heat map
+        heatmapContent.style.display = 'none';
+        toggleIcon.textContent = '+';
+        toggleIcon.classList.remove('open');
+    } else {
+        // Show heat map
+        heatmapContent.style.display = 'block';
+        toggleIcon.textContent = '+';
+        toggleIcon.classList.add('open');
+        
+        // Initialize heat map if not already done
+        if (!heatmapInitialized) {
+            initHeatMap();
+            heatmapInitialized = true;
+        }
+    }
+}
+
+// Initialize the heat map
+function initHeatMap() {
+    // Populate year selector
+    populateHeatMapYearSelector();
+    
+    // Add event listener to year selector
+    heatmapYearSelect.addEventListener('change', renderHeatMap);
+    
+    // Delay initial render to prevent page load issues
+    setTimeout(() => {
+        renderHeatMap();
+    }, 500);
+}
+
+// Populate the heat map year selector
+function populateHeatMapYearSelector() {
+    // Clear existing options
+    heatmapYearSelect.innerHTML = '';
+    
+    // Get current date
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    
+    // Add options for the current year and previous 3 years
+    for (let i = 0; i < 4; i++) {
+        const year = currentYear - i;
+        const yearOption = document.createElement('option');
+        yearOption.value = year;
+        yearOption.textContent = year;
+        heatmapYearSelect.appendChild(yearOption);
+    }
+}
+
+// Render the heat map
+function renderHeatMap() {
+    // Clear existing heat map
+    heatmapEl.innerHTML = '';
+    
+    // Get selected year
+    const year = parseInt(heatmapYearSelect.value);
+    if (!year) return; // Exit if no year selected
+    
+    // Show loading indicator
+    const loadingIndicator = document.createElement('div');
+    loadingIndicator.textContent = 'Generating heat map for ' + year + '...';
+    loadingIndicator.style.textAlign = 'center';
+    loadingIndicator.style.padding = '20px';
+    loadingIndicator.style.color = '#666';
+    loadingIndicator.style.fontStyle = 'italic';
+    heatmapEl.appendChild(loadingIndicator);
+    
+    // Use requestAnimationFrame to prevent UI blocking
+    requestAnimationFrame(() => {
+        setTimeout(() => {
+            // Remove loading indicator
+            heatmapEl.innerHTML = '';
+            
+            // Render the actual heat map
+            renderHeatMapContent(year);
+        }, 100);
+    });
+}
+
+// Render the heat map content
+function renderHeatMapContent(year) {
+    // Get the first day of the year
+    const firstDay = new Date(year, 0, 1);
+    
+    // Get today's date for highlighting
+    const today = new Date();
+    const todayString = formatDate(today);
+    
+    // Calculate the number of weeks in the year
+    const lastDay = new Date(year, 11, 31);
+    const firstDayOfYear = new Date(year, 0, 1);
+    const numWeeks = Math.ceil((lastDay - firstDayOfYear) / (7 * 24 * 60 * 60 * 1000)) + 1;
+    
+    // Create heat map cells
+    const heatmapFragment = document.createDocumentFragment();
+    const dateCache = new Map();
+    
+    // For each day of the year
+    for (let month = 0; month < 12; month++) {
+        for (let day = 1; day <= 31; day++) {
+            // Check if this day exists in this month
+            const date = new Date(year, month, day);
+            if (date.getMonth() !== month) continue;
+            
+            const dayOfWeek = date.getDay(); // 0 = Sunday, 6 = Saturday
+            const weekOfYear = Math.floor((date - firstDayOfYear) / (7 * 24 * 60 * 60 * 1000));
+            
+            const dateString = formatDate(date);
+            
+            // Create a cell for this day
+            const dayCell = document.createElement('div');
+            dayCell.className = 'heatmap-day';
+            dayCell.style.gridColumn = weekOfYear + 1;
+            dayCell.style.gridRow = dayOfWeek + 1;
+            
+            // Calculate completion percentage for this day
+            let completionPercentage;
+            if (dateCache.has(dateString)) {
+                completionPercentage = dateCache.get(dateString);
+            } else {
+                completionPercentage = calculateDayCompletionPercentage(dateString);
+                dateCache.set(dateString, completionPercentage);
+            }
+            
+            // Set background color based on completion percentage
+            if (completionPercentage > 0) {
+                const colorValue = Math.floor(255 - (completionPercentage * 255 / 100));
+                dayCell.style.backgroundColor = `rgb(${colorValue}, ${colorValue}, ${colorValue})`;
+            } else {
+                dayCell.style.backgroundColor = '#f8f8f8';
+            }
+            
+            // Format the date for the tooltip in a more readable format
+            const formattedDate = date.toLocaleDateString(undefined, {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+            
+            // Add tooltip with completion info
+            dayCell.title = `${formattedDate}: ${completionPercentage}% of habits completed`;
+            
+            // Highlight today
+            if (dateString === todayString) {
+                dayCell.classList.add('today');
+            }
+            
+            heatmapFragment.appendChild(dayCell);
+        }
+    }
+    
+    heatmapEl.appendChild(heatmapFragment);
+}
+
+// Calculate the percentage of habits completed on a specific day
+function calculateDayCompletionPercentage(dateString) {
+    // If no habits, return 0
+    if (habits.length === 0) return 0;
+    
+    // Count completed habits for this day
+    let completedCount = 0;
+    
+    habits.forEach(habit => {
+        const log = habit.logs.find(log => log.date === dateString);
+        if (log && log.status === 'completed') {
+            completedCount++;
+        }
+    });
+    
+    // Calculate percentage
+    return Math.round((completedCount / habits.length) * 100);
+}
+
+// Update heat map when habits are modified
+function updateHeatMap() {
+    if (heatmapYearSelect && heatmapYearSelect.value) {
+        renderHeatMap();
     }
 }
 
@@ -74,6 +276,7 @@ function addHabit() {
         newHabitInput.value = '';
         renderHabitList();
         updateHabitSelector();
+        updateHeatMap();
     }
 }
 
@@ -188,6 +391,9 @@ function logHabit(habitId, status) {
         if (habitSelect.value === habitId) {
             renderCalendar();
         }
+        
+        // Update heat map
+        updateHeatMap();
         
         // Trigger confetti effect if habit is marked as completed
         if (status === 'completed') {
@@ -310,6 +516,9 @@ function undoHabitLog(habitId) {
             if (habitSelect.value === habitId) {
                 renderCalendar();
             }
+            
+            // Update heat map
+            updateHeatMap();
         }
     }
 }
@@ -344,6 +553,9 @@ function deleteHabit(habitId) {
             calendarEl.innerHTML = '';
             currentStreakEl.textContent = '0';
         }
+        
+        // Update heat map
+        updateHeatMap();
     }
 }
 
@@ -485,6 +697,28 @@ function calculateStreak(habit) {
     }
     
     return streak;
+}
+
+// Toggle calendar visibility
+function toggleCalendar() {
+    const isVisible = calendarContent.style.display !== 'none';
+    
+    if (isVisible) {
+        // Hide calendar
+        calendarContent.style.display = 'none';
+        calendarToggleIcon.textContent = '+';
+        calendarToggleIcon.classList.remove('open');
+    } else {
+        // Show calendar
+        calendarContent.style.display = 'block';
+        calendarToggleIcon.textContent = '+';
+        calendarToggleIcon.classList.add('open');
+        
+        // Render calendar if a habit is selected
+        if (habitSelect.value) {
+            renderCalendar();
+        }
+    }
 }
 
 // Initialize the app when DOM is loaded
