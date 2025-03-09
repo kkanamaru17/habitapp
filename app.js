@@ -82,7 +82,7 @@ function renderHabitList() {
     habitListEl.innerHTML = '';
     
     if (habits.length === 0) {
-        habitListEl.innerHTML = '<p class="empty-state">No habits added yet. Add your first habit above!</p>';
+        habitListEl.innerHTML = '<p class="empty-state">No habits added yet. Add your first habit!</p>';
         return;
     }
     
