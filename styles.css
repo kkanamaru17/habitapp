@@ -401,10 +401,13 @@ section {
 .heatmap-wrapper {
     margin-bottom: 20px;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
 }
 
 .heatmap-grid {
     display: flex;
+    min-width: max-content;
 }
 
 .day-labels {
@@ -460,6 +463,22 @@ section {
 
 /* Mobile optimizations for heat map */
 @media (max-width: 600px) {
+    .container {
+        padding: 10px;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+    
+    main {
+        width: 100%;
+        padding: 0;
+    }
+    
+    section {
+        padding: 15px 10px;
+        margin-bottom: 15px;
+    }
+    
     .heatmap-legend {
         flex-wrap: wrap;
         justify-content: center;
@@ -468,6 +487,42 @@ section {
     
     .day-label {
         font-size: 0.6rem;
+    }
+    
+    .heatmap-wrapper {
+        margin: 0 -10px;
+        padding: 0 10px;
+        width: calc(100% + 0px);
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .heatmap {
+        grid-template-columns: repeat(53, 10px);
+        grid-template-rows: repeat(7, 10px);
+        gap: 1px;
+    }
+    
+    .heatmap-day {
+        width: 10px;
+        height: 10px;
+    }
+    
+    .calendar {
+        gap: 3px;
+    }
+    
+    .calendar-day {
+        font-size: 0.8rem;
+    }
+    
+    .habit-selector, .streak-info {
+        margin-bottom: 10px;
+    }
+    
+    #habitSelect, #heatmapYearSelect {
+        width: 100%;
+        max-width: 100%;
     }
 }
 

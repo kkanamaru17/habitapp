@@ -51,6 +51,10 @@ function init() {
     
     // Set up calendar toggle
     calendarToggle.addEventListener('click', toggleCalendar);
+    
+    // Initialize heat map since it's visible by default
+    initHeatMap();
+    heatmapInitialized = true;
 }
 
 // Toggle heat map visibility
@@ -65,7 +69,7 @@ function toggleHeatMap() {
     } else {
         // Show heat map
         heatmapContent.style.display = 'block';
-        toggleIcon.textContent = '+';
+        toggleIcon.textContent = '×';
         toggleIcon.classList.add('open');
         
         // Initialize heat map if not already done
@@ -711,7 +715,7 @@ function toggleCalendar() {
     } else {
         // Show calendar
         calendarContent.style.display = 'block';
-        calendarToggleIcon.textContent = '+';
+        calendarToggleIcon.textContent = '×';
         calendarToggleIcon.classList.add('open');
         
         // Render calendar if a habit is selected

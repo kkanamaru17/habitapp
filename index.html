@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
     <title>HabitApp</title>
     
     <!-- App icon for iOS home screen -->
@@ -49,10 +49,10 @@
             <section class="heatmap-section">
                 <h2>
                     <button class="collapsible-button" id="heatmapToggle">
-                        Habit Heat Map <span class="toggle-icon">+</span>
+                        Habit Heat Map <span class="toggle-icon open">×</span>
                     </button>
                 </h2>
-                <div class="collapsible-content" id="heatmapContent" style="display: none;">
+                <div class="collapsible-content" id="heatmapContent" style="display: block;">
                     <div class="heatmap-controls">
                         <label for="heatmapYearSelect">Year:</label>
                         <select id="heatmapYearSelect"></select>
@@ -101,10 +101,10 @@
             <section class="calendar-section">
                 <h2>
                     <button class="collapsible-button" id="calendarToggle">
-                        Calendar View <span class="toggle-icon">+</span>
+                        Calendar View <span class="toggle-icon open">×</span>
                     </button>
                 </h2>
-                <div class="collapsible-content" id="calendarContent" style="display: none;">
+                <div class="collapsible-content" id="calendarContent" style="display: block;">
                     <div class="habit-selector">
                         <label for="habitSelect">Select Habit:</label>
                         <select id="habitSelect">
