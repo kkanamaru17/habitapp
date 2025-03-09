@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HabitApp</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>HabitApp</h1>
+        </header>
+        
+        <main>
+            <section class="habit-section">
+                <h2>My Habits</h2>
+                <div class="habit-list" id="habitList">
+                    <!-- Habits will be added here dynamically -->
+                </div>
+                <div class="add-habit-container">
+                    <input type="text" id="newHabitInput" placeholder="New habit name...">
+                    <button id="addHabitBtn">Add Habit</button>
+                </div>
+            </section>
+            
+            <section class="calendar-section">
+                <h2>Calendar View</h2>
+                <div class="habit-selector">
+                    <label for="habitSelect">Select Habit:</label>
+                    <select id="habitSelect">
+                        <option value="">Select a habit</option>
+                    </select>
+                </div>
+                <div class="streak-info">
+                    <p>Current streak: <span id="currentStreak">0</span> days</p>
+                </div>
+                <div class="calendar" id="calendar">
+                    <!-- Calendar will be generated here -->
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <script src="confetti.js"></script>
+    <script src="app.js"></script>
+</body>
+</html> 
