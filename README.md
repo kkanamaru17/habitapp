@@ -1,6 +1,6 @@
 # HabitApp
 
-A simple, lightweight habit tracking web application inspired by Habitify. This app allows you to track your daily habits with unlimited logging and habit creation, all with a clean black and white interface.
+A simple, lightweight habit tracking web application. This app allows you to track your daily habits with unlimited logging and habit creation, all with a clean black and white interface.
 
 ## Features
 
@@ -49,8 +49,4 @@ All data is stored in your browser's localStorage. This means:
 - Clearing your browser data will erase your habit data.
 - Different browsers or devices will have separate data stores.
 
-To backup your data, you can use browser extensions that can export localStorage data.
-
-## License
-
-This project is open source and available under the MIT License. 
+To backup your data, you can use browser extensions that can export localStorage data. 
