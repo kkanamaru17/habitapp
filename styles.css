@@ -72,12 +72,67 @@ section {
 
 .habit-name {
     font-weight: 500;
+    flex: 1;
+    margin-right: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .habit-actions {
     display: flex;
     gap: 8px;
     align-items: center;
+    flex-shrink: 0;
+}
+
+/* Mobile optimizations */
+@media (max-width: 600px) {
+    .container {
+        padding: 10px;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    h2 {
+        font-size: 1.3rem;
+    }
+    
+    .habit-item {
+        padding: 10px 12px;
+    }
+    
+    .habit-actions {
+        gap: 4px;
+    }
+    
+    .habit-actions button {
+        padding: 6px 8px;
+        font-size: 0.8rem;
+        min-width: 40px;
+    }
+    
+    .streak-badge {
+        padding: 3px 6px;
+        font-size: 0.8rem;
+        min-width: 24px;
+    }
+    
+    #newHabitInput {
+        padding: 8px;
+        font-size: 0.9rem;
+    }
+    
+    #addHabitBtn {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+    
+    .calendar-day {
+        font-size: 0.8rem;
+    }
 }
 
 .streak-badge {

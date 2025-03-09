@@ -27,10 +27,28 @@ function init() {
     
     habitSelect.addEventListener('change', renderCalendar);
     
+    // Add resize listener to update UI for different screen sizes
+    window.addEventListener('resize', debounce(() => {
+        renderHabitList();
+    }, 250));
+    
     // Initial calendar render if a habit is selected
     if (habitSelect.value) {
         renderCalendar();
     }
+}
+
+// Debounce function to limit how often a function is called
+function debounce(func, wait) {
+    let timeout;
+    return function() {
+        const context = this;
+        const args = arguments;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            func.apply(context, args);
+        }, wait);
+    };
 }
 
 // Save habits to localStorage
@@ -64,9 +82,12 @@ function renderHabitList() {
     habitListEl.innerHTML = '';
     
     if (habits.length === 0) {
-        habitListEl.innerHTML = '<p class="empty-state">No habits added yet. Add your first habit!</p>';
+        habitListEl.innerHTML = '<p class="empty-state">No habits added yet. Add your first habit above!</p>';
         return;
     }
+    
+    // Check if we're on a mobile device
+    const isMobile = window.innerWidth <= 600;
     
     habits.forEach(habit => {
         const habitItem = document.createElement('div');
@@ -82,19 +103,26 @@ function renderHabitList() {
         const streakDisplay = currentStreak > 0 ? 
             `<span class="streak-badge" title="Current streak">${currentStreak}🔥</span>` : '';
         
+        // Use shorter button labels on mobile
+        const doneLabel = isMobile ? '✓' : 'Done';
+        const skipLabel = isMobile ? '⏭️' : 'Skip';
+        const undoLabel = isMobile ? '↩️' : 'Undo';
+        const editLabel = isMobile ? '✏️' : 'Edit';
+        const deleteLabel = isMobile ? '🗑️' : 'Delete';
+        
         habitItem.innerHTML = `
             <div class="habit-name">${habit.name} ${loggedToday ? '✅' : skippedToday ? '⏭️' : ''}</div>
             <div class="habit-actions">
                 ${!loggedToday && !skippedToday ? `
                     ${streakDisplay}
-                    <button class="done-btn" data-id="${habit.id}">Done</button>
-                    <button class="skip-btn" data-id="${habit.id}">Skip</button>
+                    <button class="done-btn" data-id="${habit.id}">${doneLabel}</button>
+                    <button class="skip-btn" data-id="${habit.id}">${skipLabel}</button>
                 ` : `
                     ${streakDisplay}
-                    <button class="undo-btn" data-id="${habit.id}">Undo</button>
-                    <button class="edit-btn" data-id="${habit.id}">Edit</button>
+                    <button class="undo-btn" data-id="${habit.id}">${undoLabel}</button>
+                    <button class="edit-btn" data-id="${habit.id}">${editLabel}</button>
                 `}
-                <button class="delete-btn" data-id="${habit.id}">Delete</button>
+                <button class="delete-btn" data-id="${habit.id}">${deleteLabel}</button>
             </div>
         `;
         
