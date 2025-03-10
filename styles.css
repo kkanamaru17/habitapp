@@ -337,11 +337,25 @@ section {
 }
 
 /* Day of week labels */
+.day-labels {
+    display: flex;
+    flex-direction: column;
+    margin-right: 5px;
+    justify-content: space-between;
+    padding: 1px 0;
+}
+
 .day-label {
-    text-align: center;
-    font-size: 0.8rem;
+    height: 12px;
+    line-height: 12px;
+    margin-bottom: 2px;
+    text-align: right;
+    padding-right: 5px;
+    font-size: 0.7rem;
     color: #777;
-    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
 }
 
 /* Heat Map Reset - Ensure no browser default styles */
@@ -410,22 +424,6 @@ section {
     min-width: max-content;
 }
 
-.day-labels {
-    display: flex;
-    flex-direction: column;
-    margin-right: 5px;
-}
-
-.day-label {
-    height: 12px;
-    line-height: 12px;
-    margin-bottom: 2px;
-    text-align: right;
-    padding-right: 5px;
-    font-size: 0.7rem;
-    color: #777;
-}
-
 .heatmap {
     display: grid;
     grid-template-columns: repeat(53, 12px); /* 53 weeks max in a year */
@@ -485,8 +483,16 @@ section {
         gap: 10px;
     }
     
+    .day-labels {
+        margin-right: 3px;
+    }
+    
     .day-label {
         font-size: 0.6rem;
+        height: 10px;
+        line-height: 10px;
+        margin-bottom: 1px;
+        padding-right: 3px;
     }
     
     .heatmap-wrapper {
@@ -523,6 +529,45 @@ section {
     #habitSelect, #heatmapYearSelect {
         width: 100%;
         max-width: 100%;
+    }
+}
+
+/* Additional breakpoint for medium-sized screens */
+@media (max-width: 768px) {
+    .day-label {
+        font-size: 0.65rem;
+        height: 11px;
+        line-height: 11px;
+    }
+    
+    .heatmap {
+        grid-template-columns: repeat(53, 11px);
+        grid-template-rows: repeat(7, 11px);
+    }
+    
+    .heatmap-day {
+        width: 11px;
+        height: 11px;
+    }
+}
+
+/* Additional breakpoint for very narrow screens */
+@media (max-width: 400px) {
+    .day-label {
+        font-size: 0.5rem;
+        height: 8px;
+        line-height: 8px;
+    }
+    
+    .heatmap {
+        grid-template-columns: repeat(53, 8px);
+        grid-template-rows: repeat(7, 8px);
+        gap: 1px;
+    }
+    
+    .heatmap-day {
+        width: 8px;
+        height: 8px;
     }
 }
 
