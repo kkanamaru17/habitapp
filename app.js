@@ -147,6 +147,11 @@ function renderHeatMap() {
 function renderHeatMapContent(year) {
     // Get the first day of the year
     const firstDay = new Date(year, 0, 1);
+    const firstDayOfWeek = firstDay.getDay(); // 0 = Sunday, 6 = Saturday
+    
+    // Calculate the start date (including days from previous year if needed)
+    const startDate = new Date(year, 0, 1);
+    startDate.setDate(startDate.getDate() - firstDayOfWeek);
     
     // Get today's date for highlighting
     const today = new Date();
@@ -154,29 +159,25 @@ function renderHeatMapContent(year) {
     
     // Calculate the number of weeks in the year
     const lastDay = new Date(year, 11, 31);
-    const firstDayOfYear = new Date(year, 0, 1);
-    const numWeeks = Math.ceil((lastDay - firstDayOfYear) / (7 * 24 * 60 * 60 * 1000)) + 1;
+    const numWeeks = Math.ceil((lastDay - startDate) / (7 * 24 * 60 * 60 * 1000));
     
     // Create heat map cells
     const heatmapFragment = document.createDocumentFragment();
     const dateCache = new Map();
     
-    // For each day of the year
-    for (let month = 0; month < 12; month++) {
-        for (let day = 1; day <= 31; day++) {
-            // Check if this day exists in this month
-            const date = new Date(year, month, day);
-            if (date.getMonth() !== month) continue;
+    // For each week
+    for (let week = 0; week < numWeeks; week++) {
+        // For each day of the week
+        for (let dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
+            const currentDate = new Date(startDate);
+            currentDate.setDate(startDate.getDate() + (week * 7) + dayOfWeek);
             
-            const dayOfWeek = date.getDay(); // 0 = Sunday, 6 = Saturday
-            const weekOfYear = Math.floor((date - firstDayOfYear) / (7 * 24 * 60 * 60 * 1000));
-            
-            const dateString = formatDate(date);
+            const dateString = formatDate(currentDate);
             
             // Create a cell for this day
             const dayCell = document.createElement('div');
             dayCell.className = 'heatmap-day';
-            dayCell.style.gridColumn = weekOfYear + 1;
+            dayCell.style.gridColumn = week + 1;
             dayCell.style.gridRow = dayOfWeek + 1;
             
             // Calculate completion percentage for this day
@@ -197,7 +198,7 @@ function renderHeatMapContent(year) {
             }
             
             // Format the date for the tooltip in a more readable format
-            const formattedDate = date.toLocaleDateString(undefined, {
+            const formattedDate = currentDate.toLocaleDateString(undefined, {
                 year: 'numeric',
                 month: 'short',
                 day: 'numeric'
